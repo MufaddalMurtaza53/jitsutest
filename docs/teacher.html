@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Page</title>
+</head>
+<body>
+  <h1>Teacher Jitsi Class</h1>
+  <div id="jitsi-container"></div>
+
+  <script>
+    fetch('http://localhost:8000/api/generate-token/', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ meetingName: 'testclass123', userName: 'Teacher M Mufaddal' })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.token) {
+        const iframe = document.createElement("iframe");
+        iframe.src = `https://8x8.vc/testclass123?jwt=${data.token}`;
+        iframe.style.width = "100%";
+        iframe.style.height = "700px";
+        iframe.allow = "camera; microphone; fullscreen; display-capture";
+        iframe.allowFullscreen = true;
+
+        document.getElementById("jitsi-container").appendChild(iframe);
+      } else {
+        console.error('Token not received', data);
+      }
+    })
+    .catch(err => console.error('Error:', err));
+  </script>
+</body>
+</html>
